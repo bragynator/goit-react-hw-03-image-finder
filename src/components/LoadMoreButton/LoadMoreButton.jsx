@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from './LoadMoreButton.module.css';
 
 export function LoadMoreButton({ onClick }) {
@@ -7,3 +8,7 @@ export function LoadMoreButton({ onClick }) {
     </button>
   );
 }
+
+LoadMoreButton.propTypes = {
+  onClick: PropTypes.func,
+};

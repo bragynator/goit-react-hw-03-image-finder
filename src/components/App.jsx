@@ -12,7 +12,7 @@ export class App extends Component {
     page: 1,
     isLoading: false,
     showModal: false,
-    showModalNumber: null,
+    modalId: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,16 +27,26 @@ export class App extends Component {
         )}&key=27493415-caff1e79bf6baf64c8d3710ef&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => res.json())
-        .then(data =>
+        .then(data => {
+          if (data.hits.length === 0) {
+            alert(`Sorry, we didn't find anything!`);
+            return;
+          }
+
           this.setState(prev => ({
             galleryItems: [...prev.galleryItems, ...data.hits],
-            isLoading: false,
-          }))
-        );
+          }));
+        })
+        .finally(() => this.setState({ isLoading: false }));
     }
   }
 
   handleSubmit = searchQueue => {
+    if (searchQueue === '') {
+      alert('Please, enter search query!');
+      return;
+    }
+
     this.setState({ galleryItems: [], searchQueue, page: 1 });
   };
 
@@ -49,7 +59,7 @@ export class App extends Component {
   showModal = id => {
     this.setState({
       showModal: true,
-      showModalNumber: id,
+      modalId: id,
     });
   };
 
@@ -59,7 +69,7 @@ export class App extends Component {
 
   render() {
     const currentModalPicture = this.state.galleryItems.find(
-      item => item.id === this.state.showModalNumber
+      item => item.id === this.state.modalId
     );
 
     return (
